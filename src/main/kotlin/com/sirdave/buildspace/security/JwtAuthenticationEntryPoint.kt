@@ -1,8 +1,8 @@
-package com.company.arena.security
+package com.sirdave.buildspace.security
 
-import com.company.arena.constants.SecurityConstants
-import com.company.arena.helper.HttpResponse
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.sirdave.buildspace.constants.SecurityConstants
+import com.sirdave.buildspace.helper.ApiResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.security.core.AuthenticationException
@@ -17,13 +17,13 @@ class JwtAuthenticationEntryPoint: Http403ForbiddenEntryPoint() {
     override fun commence(request: HttpServletRequest, response: HttpServletResponse,
                           exception: AuthenticationException){
 
-        val httpResponse = HttpResponse(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN,
+        val apiResponse = ApiResponse(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN,
             HttpStatus.FORBIDDEN.reasonPhrase, SecurityConstants.FORBIDDEN_MESSAGE)
         response.contentType = APPLICATION_JSON_VALUE
         response.status = HttpStatus.FORBIDDEN.value()
         val outputStream = response.outputStream
         val mapper = ObjectMapper()
-        mapper.writeValue(outputStream, httpResponse)
+        mapper.writeValue(outputStream, apiResponse)
         outputStream.flush()
     }
 }
