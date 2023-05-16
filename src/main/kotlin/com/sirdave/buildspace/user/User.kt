@@ -31,5 +31,5 @@ class User (
         )]
     )
     @Column(name = "id", updatable = false, nullable = false)
-    private val id: UUID? = null
+    val id: UUID? = null
 )
