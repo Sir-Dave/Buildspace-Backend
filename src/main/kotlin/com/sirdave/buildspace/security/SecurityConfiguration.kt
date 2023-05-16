@@ -1,6 +1,6 @@
-package com.company.arena.security
+package com.sirdave.buildspace.security
 
-import com.company.arena.constants.SecurityConstants
+import com.sirdave.buildspace.constants.SecurityConstants
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -41,8 +41,6 @@ class SecurityConfiguration(
                 .and()
 
         https.authorizeRequests().antMatchers(*SecurityConstants.PUBLIC_URLS).permitAll()
-            .antMatchers(("/_ah/start")).permitAll()
-            .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
             .anyRequest().authenticated().and()
             .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
             .authenticationEntryPoint(jwtAuthenticationEntryPoint).and()

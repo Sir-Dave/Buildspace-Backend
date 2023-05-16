@@ -1,6 +1,6 @@
-package com.company.arena.security
+package com.sirdave.buildspace.security
 
-import com.company.arena.constants.SecurityConstants
+import com.sirdave.buildspace.constants.SecurityConstants
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder

@@ -1,12 +1,11 @@
-package com.company.arena.security
+package com.sirdave.buildspace.security
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm.HMAC512
 import com.auth0.jwt.exceptions.JWTVerificationException
-import com.company.arena.constants.SecurityConstants
-import com.company.arena.user.UserPrincipal
-import org.apache.commons.lang3.StringUtils
+import com.sirdave.buildspace.constants.SecurityConstants
+import com.sirdave.buildspace.user.UserPrincipal
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -18,7 +17,6 @@ import java.util.*
 import java.util.Arrays.stream
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
-import kotlin.collections.ArrayList
 
 @Component
 class JwtTokenProvider {
@@ -28,8 +26,8 @@ class JwtTokenProvider {
 
     fun generateJwtToken(userPrincipal: UserPrincipal): String{
         val claims = getClaimsFromUser(userPrincipal)
-        return JWT.create().withIssuer(SecurityConstants.ARENA_LLC)
-            .withAudience(SecurityConstants.ARENA_ADMINISTRATION)
+        return JWT.create().withIssuer(SecurityConstants.JWT_ISSUER)
+            .withAudience(SecurityConstants.JWT_AUDIENCE)
             .withIssuedAt(Date()).withSubject(userPrincipal.username)
             .withArrayClaim(SecurityConstants.AUTHORITIES, claims)
             .withExpiresAt(Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_DATE))
@@ -53,7 +51,7 @@ class JwtTokenProvider {
 
     fun isTokenValid(username: String, token: String): Boolean{
         val verifier = getJWTVerifier()
-        return StringUtils.isNotEmpty(username) && !isTokenExpired(verifier, token)
+        return username.isNotEmpty() && !isTokenExpired(verifier, token)
     }
 
     fun getSubject(token: String): String {
@@ -83,7 +81,7 @@ class JwtTokenProvider {
         val verifier: JWTVerifier
         try {
             val algorithm = HMAC512(secret)
-            verifier = JWT.require(algorithm).withIssuer(SecurityConstants.ARENA_LLC).build()
+            verifier = JWT.require(algorithm).withIssuer(SecurityConstants.JWT_ISSUER).build()
         }
         catch (exception: JWTVerificationException){
             throw JWTVerificationException(SecurityConstants.TOKEN_CANNOT_BE_VERIFIED)
