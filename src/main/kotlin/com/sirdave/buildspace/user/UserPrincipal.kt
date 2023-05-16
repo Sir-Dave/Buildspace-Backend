@@ -1,36 +1,41 @@
 package com.sirdave.buildspace.user
 
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.util.Arrays.stream
+import java.util.stream.Collectors
 
-class UserPrincipal(user: User): UserDetails {
+class UserPrincipal(private var user: User?): UserDetails {
 
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        TODO("Not yet implemented")
+    override fun getAuthorities(): Collection<GrantedAuthority?>? {
+        return stream(user!!.authorities).map { role ->
+            SimpleGrantedAuthority(role)
+        }.collect(Collectors.toList())
     }
 
     override fun getPassword(): String {
-        TODO("Not yet implemented")
+        return this.user!!.password!!
     }
 
     override fun getUsername(): String {
-        TODO("Not yet implemented")
+        return this.user!!.email!!
     }
 
     override fun isAccountNonExpired(): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 
     override fun isAccountNonLocked(): Boolean {
-        TODO("Not yet implemented")
+        return this.user!!.isNotLocked
     }
 
     override fun isCredentialsNonExpired(): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 
     override fun isEnabled(): Boolean {
-        TODO("Not yet implemented")
+        return this.user!!.isActive
     }
 
 }
