@@ -9,4 +9,6 @@ interface UserService {
     fun findUserById(id: UUID): User
 
     fun findUserByEmail(email: String): User
+
+    fun isUserDoesNotExist(email: String): Boolean
 }

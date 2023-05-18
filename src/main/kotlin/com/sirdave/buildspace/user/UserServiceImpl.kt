@@ -23,4 +23,9 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService{
             .orElseThrow { EntityNotFoundException("No user with email $email was found") }
 
     }
+
+    override fun isUserDoesNotExist(email: String): Boolean {
+        val userByEmail = userRepository.findByEmail(email)
+        return userByEmail.isEmpty
+    }
 }
