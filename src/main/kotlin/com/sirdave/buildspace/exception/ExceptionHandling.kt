@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.DisabledException
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.NoHandlerFoundException
 import java.util.*
+
 
 private const val ACCOUNT_LOCKED = "Your account has been locked. Please contact administration"
 private const val METHOD_IS_NOT_ALLOWED = "This request method is not allowed on this endpoint. Please send a '%s' request"
@@ -82,9 +84,17 @@ class ExceptionHandling: ErrorController {
         return createHttpResponse(HttpStatus.BAD_REQUEST, exception.message!!)
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun httpMessageNotReadableException(exception: HttpMessageNotReadableException): ResponseEntity<ApiResponse>{
+        LOGGER.error(exception.message)
+        return createHttpResponse(HttpStatus.BAD_REQUEST, "Invalid request payload")
+    }
+
     @ExceptionHandler(Exception::class)
     fun internalServerErrorException(exception: Exception): ResponseEntity<ApiResponse>{
+        LOGGER.info("type is ${exception.javaClass.name}")
         LOGGER.error(exception.message)
+
         return createHttpResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception.message!!)
     }
 
@@ -107,5 +117,10 @@ class ExceptionHandling: ErrorController {
     override fun getErrorPath(): String {
         return ERROR_PATH
     }
-
 }
+
+
+
+
+
+
