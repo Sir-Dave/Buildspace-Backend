@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 @Service
@@ -40,7 +40,7 @@ class AuthServiceImpl(
             email = registerRequest.email,
             phoneNumber = registerRequest.phoneNumber,
             password = encodedPassword,
-            dateJoined = LocalDate.now(),
+            dateJoined = LocalDateTime.now(),
             role = role.name,
             authorities = role.authorities,
             isActive = true,

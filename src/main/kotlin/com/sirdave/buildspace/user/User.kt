@@ -2,8 +2,8 @@ package com.sirdave.buildspace.user
 
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Parameter
-import java.time.LocalDate
-import java.util.UUID
+import java.time.LocalDateTime
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -14,7 +14,7 @@ class User (
     var email: String?,
     var phoneNumber: String?,
     var password: String?,
-    var dateJoined: LocalDate?,
+    var dateJoined: LocalDateTime?,
     var role: String?,
     var authorities: Array<String>?,
     var isActive: Boolean,
