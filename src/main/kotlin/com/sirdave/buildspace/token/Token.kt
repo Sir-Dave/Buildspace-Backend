@@ -16,15 +16,16 @@ class Token(
     @Column(nullable = false)
     val expiresAt: LocalDateTime,
 
-    var confirmedAt: LocalDateTime?,
-
     @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
-    val user: User,
+    val user: User
 
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "token_sequence")
     @SequenceGenerator(name = "token_sequence", sequenceName = "token_sequence", allocationSize = 1)
     @Column(nullable = false, updatable = false)
     val id: Long? = null
-)
+
+    var confirmedAt: LocalDateTime? = null
+}
