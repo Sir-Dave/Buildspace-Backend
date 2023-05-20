@@ -1,6 +1,5 @@
 package com.sirdave.buildspace.email
 
-import com.sirdave.buildspace.user.User
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
@@ -35,10 +34,10 @@ class EmailServiceImpl : EmailService {
     }
 
     @Async
-    override fun sendEmailToUser(user: User, emailSubject: String, body: String) {
+    override fun sendEmailToUser(email: String, emailSubject: String, body: String) {
         logger.info("Sending email to user...")
         try {
-            val message = createMessage(user, emailSubject, body)
+            val message = createMessage(email, emailSubject, body)
             val smtpTransport: Transport = emailSession
                 .getTransport(SIMPLE_MAIL_TRANSFER_PROTOCOL)
             smtpTransport.connect(
@@ -47,7 +46,7 @@ class EmailServiceImpl : EmailService {
             )
             smtpTransport.sendMessage(message, message.allRecipients)
             smtpTransport.close()
-            logger.info("Email sent to: " + user.email)
+            logger.info("Email sent to: $email")
         } catch (exception: MessagingException) {
             logger.error("Failed to send message: " + exception.message)
             throw IllegalStateException("Failed to send email")
@@ -55,10 +54,10 @@ class EmailServiceImpl : EmailService {
     }
 
 
-    private fun createMessage(user: User, emailSubject: String, body: String): Message {
+    private fun createMessage(email: String, emailSubject: String, body: String): Message {
         val message = MimeMessage(emailSession)
         message.setFrom(InternetAddress(emailUsername))
-        message.setRecipient(Message.RecipientType.TO, InternetAddress(user.email, false))
+        message.setRecipient(Message.RecipientType.TO, InternetAddress(email, false))
         message.subject = emailSubject
         message.setText(body)
         message.sentDate = Date()
