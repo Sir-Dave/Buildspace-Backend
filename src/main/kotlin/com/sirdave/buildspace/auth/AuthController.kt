@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping(path = ["api/v1/auth"])
@@ -24,8 +25,11 @@ class AuthController(
 ) {
 
     @PostMapping("/register")
-    fun registerUser(@RequestBody registerRequest: RegisterRequest): ResponseEntity<ApiResponse> {
-        authService.register(registerRequest)
+    fun registerUser(
+        @RequestBody registerRequest: RegisterRequest,
+        servletRequest: HttpServletRequest
+    ): ResponseEntity<ApiResponse> {
+        authService.register(registerRequest, servletRequest)
         val response = ApiResponse(
             HttpStatus.CREATED.value(),
             HttpStatus.CREATED,

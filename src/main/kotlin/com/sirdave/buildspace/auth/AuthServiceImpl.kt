@@ -1,5 +1,6 @@
 package com.sirdave.buildspace.auth
 
+import com.sirdave.buildspace.event.AuthEvent
 import com.sirdave.buildspace.exception.EntityExistsException
 import com.sirdave.buildspace.exception.PasswordsDoNotMatchException
 import com.sirdave.buildspace.helper.Role
@@ -7,18 +8,21 @@ import com.sirdave.buildspace.user.User
 import com.sirdave.buildspace.user.UserPrincipal
 import com.sirdave.buildspace.user.UserService
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 @Service
 @Qualifier("userDetailsService")
 class AuthServiceImpl(
     private val userService: UserService,
-    private val passwordEncoder: BCryptPasswordEncoder
+    private val passwordEncoder: BCryptPasswordEncoder,
+    private val publisher: ApplicationEventPublisher
 ) : AuthService, UserDetailsService {
 
     override fun loadUserByUsername(email: String): UserDetails {
@@ -27,7 +31,7 @@ class AuthServiceImpl(
         return UserPrincipal(user)
     }
 
-    override fun register(registerRequest: RegisterRequest) {
+    override fun register(registerRequest: RegisterRequest, servletRequest: HttpServletRequest) {
         validateNewUser(registerRequest.email)
         doPasswordsMatch(registerRequest.password, registerRequest.confirmPassword)
 
@@ -47,6 +51,7 @@ class AuthServiceImpl(
             isNotLocked = true
         )
         userService.saveUser(user)
+        publisher.publishEvent(AuthEvent(user, servletRequest.contextPath))
     }
 
     private fun validateNewUser(email: String){
