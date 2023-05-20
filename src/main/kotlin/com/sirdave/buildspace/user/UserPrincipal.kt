@@ -15,11 +15,11 @@ class UserPrincipal(private var user: User?): UserDetails {
     }
 
     override fun getPassword(): String {
-        return this.user!!.password!!
+        return this.user!!.password
     }
 
     override fun getUsername(): String {
-        return this.user!!.email!!
+        return this.user!!.email
     }
 
     override fun isAccountNonExpired(): Boolean {
