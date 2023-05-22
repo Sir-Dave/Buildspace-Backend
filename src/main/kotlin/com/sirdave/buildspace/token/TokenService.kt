@@ -6,7 +6,7 @@ interface TokenService {
 
     fun findByToken(token: String): Token
 
-    fun confirmToken(token: String): Token
-
     fun createVerificationToken(user: User): Token
+
+    fun confirmToken(token: String)
 }

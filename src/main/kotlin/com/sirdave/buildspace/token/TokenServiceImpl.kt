@@ -17,8 +17,19 @@ class TokenServiceImpl(private val repository: TokenRepository) : TokenService {
             }
     }
 
+    override fun createVerificationToken(user: User): Token {
+        val token = UUID.randomUUID().toString()
+        val confirmationToken = Token(
+            token = token,
+            createdAt = LocalDateTime.now(),
+            expiresAt = LocalDateTime.now().plusHours(24),
+            user = user
+        )
+        return repository.save(confirmationToken)
+    }
+
     @Transactional
-    override fun confirmToken(token: String): Token {
+    override fun confirmToken(token: String){
         val confirmationToken = findByToken(token)
         val expiredAt = confirmationToken.expiresAt
 
@@ -33,17 +44,5 @@ class TokenServiceImpl(private val repository: TokenRepository) : TokenService {
             //Activate the user after confirming the token
             confirmationToken.user.isActive = true
         }
-        return confirmationToken
-    }
-
-    override fun createVerificationToken(user: User): Token {
-        val token = UUID.randomUUID().toString()
-        val confirmationToken = Token(
-            token = token,
-            createdAt = LocalDateTime.now(),
-            expiresAt = LocalDateTime.now().plusHours(24),
-            user = user
-        )
-        return repository.save(confirmationToken)
     }
 }
