@@ -23,7 +23,7 @@ import java.util.*
 private const val ACCOUNT_LOCKED = "Your account has been locked. Please contact administration"
 private const val METHOD_IS_NOT_ALLOWED = "This request method is not allowed on this endpoint. Please send a '%s' request"
 private const val INCORRECT_CREDENTIALS = "Username/password incorrect, please try again"
-private const val ACCOUNT_DISABLED = "Your account has been disabled. If this is an error, please contact administration"
+private const val ACCOUNT_DISABLED = "Please verify your account to continue. If this is an error, please contact administration"
 private const val NOT_ENOUGH_PERMISSIONS = "You do not have sufficient permissions to access this endpoint"
 private const val ERROR_PATH = "/error"
 
