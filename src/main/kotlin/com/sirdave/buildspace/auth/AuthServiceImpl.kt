@@ -22,11 +22,13 @@ import javax.servlet.http.HttpServletRequest
 class AuthServiceImpl(
     private val userService: UserService,
     private val passwordEncoder: BCryptPasswordEncoder,
-    private val publisher: ApplicationEventPublisher
+    private val publisher: ApplicationEventPublisher,
+    private val loginAttemptService: LoginAttemptService,
 ) : AuthService, UserDetailsService {
 
     override fun loadUserByUsername(email: String): UserDetails {
         val user = userService.findUserByEmail(email)
+        validateLoginAttempt(user)
         userService.saveUser(user)
         return UserPrincipal(user)
     }
@@ -52,6 +54,13 @@ class AuthServiceImpl(
         )
         userService.saveUser(user)
         publisher.publishEvent(AuthEvent(user, servletRequest.requestURL.toString()))
+    }
+
+    private fun validateLoginAttempt(user: User){
+        if (user.isNotLocked)
+            user.isNotLocked = !loginAttemptService.hasExceededMaximumAttempt(user.email)
+
+        else loginAttemptService.evictUserFromLoginAttemptCache(user.email)
     }
 
     private fun validateNewUser(email: String){
