@@ -14,7 +14,7 @@ import kotlin.jvm.Transient
 class Subscription(
     @ManyToOne
     @JoinColumn(name = "user_id")
-    val user: User,
+    var user: User,
 
     @Enumerated(EnumType.STRING)
     val type: SubscriptionType,
@@ -39,4 +39,12 @@ class Subscription(
 
     @Transient
     val isExpired: Boolean = endDate.isBefore(LocalDateTime.now())
+
+    fun addToUserSubscription(user: User) {
+        user.addSubscription(this)
+    }
+
+    fun deleteSubscription(user: User){
+        user.deleteSubscription(this)
+    }
 }
