@@ -31,3 +31,8 @@ jwt:
 server:
   error:
     include-message: always
+
+
+email:
+  username: ${EMAIL_USERNAME}
+  password: ${EMAIL_PASSWORD}
