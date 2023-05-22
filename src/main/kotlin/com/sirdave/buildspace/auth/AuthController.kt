@@ -3,16 +3,14 @@ package com.sirdave.buildspace.auth
 import com.sirdave.buildspace.helper.ApiResponse
 import com.sirdave.buildspace.mapper.toUserDto
 import com.sirdave.buildspace.security.JwtTokenProvider
+import com.sirdave.buildspace.token.TokenService
 import com.sirdave.buildspace.user.UserPrincipal
 import com.sirdave.buildspace.user.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
@@ -21,7 +19,8 @@ class AuthController(
     private val authService: AuthService,
     private val userService: UserService,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val authenticationManager: AuthenticationManager
+    private val authenticationManager: AuthenticationManager,
+    private val tokenService: TokenService
 ) {
 
     @PostMapping("/register")
@@ -34,9 +33,21 @@ class AuthController(
             HttpStatus.CREATED.value(),
             HttpStatus.CREATED,
             HttpStatus.CREATED.reasonPhrase,
-            "User successfully created"
+            "Registration successful. Please check your email for a verification link."
         )
         return ResponseEntity(response, HttpStatus.CREATED)
+    }
+
+    @GetMapping("/register/confirm")
+    fun confirmUserToken(@RequestParam("token") token: String): ResponseEntity<ApiResponse> {
+        tokenService.confirmToken(token)
+        val response = ApiResponse(
+            HttpStatus.OK.value(),
+            HttpStatus.OK,
+            HttpStatus.OK.reasonPhrase,
+            "Account verified. Please proceed to log in to your account."
+        )
+        return ResponseEntity(response, HttpStatus.OK)
     }
 
     @PostMapping("/login")

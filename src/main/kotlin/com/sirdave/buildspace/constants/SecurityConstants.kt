@@ -11,6 +11,5 @@ object SecurityConstants {
     const val TOKEN_CANNOT_BE_VERIFIED = "Token cannot be verified"
     const val FORBIDDEN_MESSAGE = "You need to log in to access this page"
     const val ACCESS_DENIED = "You do not have permission to access this page"
-    val PUBLIC_URLS = arrayOf("/api/v1/auth/login", "/api/v1/auth/register",
-        "/api/v1/auth/reset-password/**")
+    val PUBLIC_URLS = arrayOf("/api/v1/auth/**")
 }

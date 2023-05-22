@@ -47,11 +47,11 @@ class AuthServiceImpl(
             dateJoined = LocalDateTime.now(),
             role = role.name,
             authorities = role.authorities,
-            isActive = true,
+            isActive = false,
             isNotLocked = true
         )
         userService.saveUser(user)
-        publisher.publishEvent(AuthEvent(user, servletRequest.contextPath))
+        publisher.publishEvent(AuthEvent(user, servletRequest.requestURL.toString()))
     }
 
     private fun validateNewUser(email: String){
