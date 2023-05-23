@@ -41,6 +41,7 @@ class SecurityConfiguration(
                 .and()
 
         https.authorizeRequests().antMatchers(*SecurityConstants.PUBLIC_URLS).permitAll()
+            .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
             .anyRequest().authenticated().and()
             .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
             .authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
