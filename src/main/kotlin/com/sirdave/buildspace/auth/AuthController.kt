@@ -6,6 +6,7 @@ import com.sirdave.buildspace.security.JwtTokenProvider
 import com.sirdave.buildspace.token.TokenService
 import com.sirdave.buildspace.user.UserPrincipal
 import com.sirdave.buildspace.user.UserService
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
@@ -23,6 +24,7 @@ class AuthController(
     private val tokenService: TokenService
 ) {
 
+    @Operation(summary = "Register new user")
     @PostMapping("/register")
     fun registerUser(
         @RequestBody registerRequest: RegisterRequest,
@@ -38,6 +40,7 @@ class AuthController(
         return ResponseEntity(response, HttpStatus.CREATED)
     }
 
+    @Operation(summary = "Activate user using their email address")
     @GetMapping("/register/confirm")
     fun confirmUserToken(@RequestParam("token") token: String): ResponseEntity<ApiResponse> {
         tokenService.confirmToken(token)
@@ -50,6 +53,7 @@ class AuthController(
         return ResponseEntity(response, HttpStatus.OK)
     }
 
+    @Operation(summary = "Login user")
     @PostMapping("/login")
     fun loginUser(@RequestBody signInRequest: SignInRequest): ResponseEntity<SignInResponse> {
         authenticateUser(signInRequest.email, signInRequest.password)
