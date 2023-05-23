@@ -37,6 +37,7 @@ class User (
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val subscriptions: MutableSet<Subscription> = mutableSetOf()
 
+    @OneToOne
     var currentSubscription: Subscription? = null
 
     fun addSubscription(subscription: Subscription) {
