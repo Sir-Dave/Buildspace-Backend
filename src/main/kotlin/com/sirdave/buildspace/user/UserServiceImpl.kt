@@ -1,6 +1,9 @@
 package com.sirdave.buildspace.user
 
+import com.sirdave.buildspace.constants.AuthorityConstants.USER_READ
 import com.sirdave.buildspace.exception.EntityNotFoundException
+import com.sirdave.buildspace.mapper.toUserDto
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
@@ -27,5 +30,10 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService{
     override fun isUserDoesNotExist(email: String): Boolean {
         val userByEmail = userRepository.findByEmail(email)
         return userByEmail.isEmpty
+    }
+
+    @PreAuthorize("hasAnyAuthority('${USER_READ}')")
+    override fun getAllUsers(): List<UserDto> {
+        return userRepository.findAll().map { it.toUserDto() }
     }
 }

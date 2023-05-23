@@ -11,4 +11,6 @@ interface UserService {
     fun findUserByEmail(email: String): User
 
     fun isUserDoesNotExist(email: String): Boolean
+
+    fun getAllUsers(): List<UserDto>
 }
