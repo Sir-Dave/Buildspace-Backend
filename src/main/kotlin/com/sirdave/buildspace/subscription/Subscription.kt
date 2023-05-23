@@ -17,9 +17,7 @@ class Subscription(
     var user: User,
 
     @Enumerated(EnumType.STRING)
-    val type: SubscriptionType,
-
-    val startDate: LocalDateTime,
+    val type: SubscriptionType
 ){
 
     @Id
@@ -34,6 +32,9 @@ class Subscription(
     )
     @Column(name = "id", updatable = false, nullable = false)
     val id: UUID? = null
+
+
+    val startDate: LocalDateTime = LocalDateTime.now()
 
     val endDate: LocalDateTime = startDate.plusDays(type.numberOfDays.toLong())
 
