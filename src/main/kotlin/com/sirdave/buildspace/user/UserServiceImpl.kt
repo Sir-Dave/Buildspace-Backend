@@ -3,6 +3,7 @@ package com.sirdave.buildspace.user
 import com.sirdave.buildspace.constants.AuthorityConstants.USER_READ
 import com.sirdave.buildspace.exception.EntityNotFoundException
 import com.sirdave.buildspace.mapper.toUserDto
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 import java.util.*
@@ -33,7 +34,9 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService{
     }
 
     @PreAuthorize("hasAnyAuthority('${USER_READ}')")
-    override fun getAllUsers(): List<UserDto> {
-        return userRepository.findAll().map { it.toUserDto() }
+    override fun getAllUsers(page: Int, pageSize: Int): List<UserDto> {
+        val pageable = PageRequest.of(page, pageSize)
+        val pagedResult = userRepository.getAllUsers(pageable)
+        return if (pagedResult.hasContent()) pagedResult.content.map { it.toUserDto() } else emptyList()
     }
 }
