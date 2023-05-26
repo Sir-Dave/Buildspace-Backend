@@ -36,3 +36,6 @@ server:
 email:
   username: ${EMAIL_USERNAME}
   password: ${EMAIL_PASSWORD}
+
+
+paystack-secret-key: ${PAYSTACK_SECRET_KEY}
