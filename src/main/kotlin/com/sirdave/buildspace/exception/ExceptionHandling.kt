@@ -84,6 +84,12 @@ class ExceptionHandling: ErrorController {
         return createHttpResponse(HttpStatus.BAD_REQUEST, exception.message!!)
     }
 
+    @ExceptionHandler(PaymentException::class)
+    fun paymentException(exception: PaymentException): ResponseEntity<ApiResponse>{
+        LOGGER.error(exception.message)
+        return createHttpResponse(HttpStatus.BAD_REQUEST, exception.message!!)
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun httpMessageNotReadableException(exception: HttpMessageNotReadableException): ResponseEntity<ApiResponse>{
         LOGGER.error(exception.message)
