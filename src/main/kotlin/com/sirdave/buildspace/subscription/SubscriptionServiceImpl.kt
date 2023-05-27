@@ -32,12 +32,11 @@ class SubscriptionServiceImpl(
         return user.currentSubscription!!.toSubscriptionDto()
     }
 
-    override fun createSubscription(subscriptionRequest: SubscriptionRequest) {
-        val userId = UUID.fromString(subscriptionRequest.userId)
-        val user = userService.findUserById(userId)
+    override fun createSubscription(userEmail: String, type: String) {
+        val user = userService.findUserByEmail(userEmail)
         val subscription = Subscription(
             user = user,
-            type = getSubscriptionType(subscriptionRequest.type)
+            type = getSubscriptionType(type)
         )
 
         if (user.currentSubscription != null)

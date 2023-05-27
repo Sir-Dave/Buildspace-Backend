@@ -10,5 +10,5 @@ interface SubscriptionService {
 
     fun getUserCurrentSubscription(userId: UUID): SubscriptionDto
 
-    fun createSubscription(subscriptionRequest: SubscriptionRequest)
+    fun createSubscription(userEmail: String, type: String)
 }
