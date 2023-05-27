@@ -39,9 +39,6 @@ class SubscriptionServiceImpl(
             type = getSubscriptionType(type)
         )
 
-        if (user.currentSubscription != null)
-            throw IllegalStateException("Current subscription is still active for user")
-
         subscription.addToUserSubscription(user)
         user.renewSubscription(subscription)
         repository.save(subscription)
