@@ -13,7 +13,7 @@ class Transaction (
     val date: LocalDateTime,
 
     @Enumerated(EnumType.STRING)
-    val status: Status,
+    var status: Status,
 
     val currency: String = "NGN"){
     @Id
@@ -23,5 +23,5 @@ class Transaction (
     val id: Long? = null
 
     @OneToOne
-    val subscription: Subscription? = null
+    var subscription: Subscription? = null
 }
