@@ -1,6 +1,7 @@
 package com.sirdave.buildspace.payment
 
 import com.google.gson.Gson
+import com.sirdave.buildspace.event.PaymentSuccessEvent
 import com.sirdave.buildspace.exception.PaymentException
 import com.sirdave.buildspace.helper.Status
 import com.sirdave.buildspace.helper.formatDate
@@ -17,7 +18,6 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import javax.transaction.Transactional
 
 
 @Service
@@ -106,7 +106,7 @@ class PaymentServiceImpl(
         if (event == "charge.success"){
             val transaction = transactionService.findTransactionByReference(
                 parsedPayload.data.reference!!)
-            publisher.publishEvent(transaction)
+            publisher.publishEvent(PaymentSuccessEvent(transaction))
         }
     }
 }
