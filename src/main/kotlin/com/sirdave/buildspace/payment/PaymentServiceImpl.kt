@@ -98,7 +98,6 @@ class PaymentServiceImpl(
         return transactionService.saveTransaction(transaction)
     }
 
-    @Transactional
     override fun retrievePaymentStatus(payload: String) {
         val parsedPayload = gson.fromJson(payload, TransactionResponse::class.java)
         logger.info("parsedPayload is $parsedPayload")
@@ -107,8 +106,6 @@ class PaymentServiceImpl(
         if (event == "charge.success"){
             val transaction = transactionService.findTransactionByReference(
                 parsedPayload.data.reference!!)
-
-            transaction.status = Status.COMPLETED
             publisher.publishEvent(transaction)
         }
     }
