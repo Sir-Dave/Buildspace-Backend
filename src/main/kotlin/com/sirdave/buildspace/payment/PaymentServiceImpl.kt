@@ -5,6 +5,7 @@ import com.sirdave.buildspace.exception.PaymentException
 import com.sirdave.buildspace.helper.Status
 import com.sirdave.buildspace.transaction.Transaction
 import com.sirdave.buildspace.transaction.TransactionService
+import com.sirdave.buildspace.user.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationEventPublisher
@@ -17,11 +18,14 @@ import java.net.http.HttpResponse
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.transaction.Transactional
 
 
 @Service
 class PaymentServiceImpl(
-    private val transactionService: TransactionService
+    private val userService: UserService,
+    private val transactionService: TransactionService,
+    private val publisher: ApplicationEventPublisher
     ): PaymentService {
 
     private val logger = LoggerFactory.getLogger(javaClass.simpleName)
@@ -44,6 +48,11 @@ class PaymentServiceImpl(
         pin: String,
         subscriptionType: String
     ): Transaction {
+
+        val user = userService.findUserByEmail(email)
+        if (user.currentSubscription != null)
+            throw IllegalStateException("Current subscription is still active for user")
+
         val card = Card(cardCvv, cardNumber, cardExpiryMonth, cardExpiryYear)
         val chargeRequest = ChargeRequest(email, (amount * 100).toString(), card, pin)
 
@@ -88,9 +97,19 @@ class PaymentServiceImpl(
         return transactionService.saveTransaction(transaction)
     }
 
+    @Transactional
     override fun retrievePaymentStatus(payload: String) {
         val parsedPayload = gson.fromJson(payload, TransactionResponse::class.java)
         logger.info("parsedPayload is $parsedPayload")
+        val event = parsedPayload.event
+
+        if (event == "charge.success"){
+            val transaction = transactionService.findTransactionByReference(
+                parsedPayload.data.reference!!)
+
+            transaction.status = Status.COMPLETED
+            publisher.publishEvent(transaction)
+        }
     }
 
     private fun formatDate(date: String): LocalDateTime {
