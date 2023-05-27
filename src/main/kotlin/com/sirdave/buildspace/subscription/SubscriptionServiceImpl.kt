@@ -1,7 +1,7 @@
 package com.sirdave.buildspace.subscription
 
 import com.sirdave.buildspace.exception.EntityNotFoundException
-import com.sirdave.buildspace.helper.SubscriptionType
+import com.sirdave.buildspace.helper.getSubscriptionType
 import com.sirdave.buildspace.mapper.toSubscriptionDto
 import com.sirdave.buildspace.user.UserService
 import org.springframework.stereotype.Service
@@ -43,16 +43,4 @@ class SubscriptionServiceImpl(
         user.renewSubscription(subscription)
         repository.save(subscription)
     }
-
-    private fun getSubscriptionType(name: String): SubscriptionType {
-        check(isValidSubscriptionType(name)){
-            throw IllegalStateException("Invalid subscription type")
-        }
-        return SubscriptionType.valueOf(name.uppercase())
-    }
-
-    private fun isValidSubscriptionType(name: String): Boolean {
-        return Arrays.stream(SubscriptionType.values()).anyMatch { type -> type.name.equals(name, ignoreCase = true) }
-    }
-
 }

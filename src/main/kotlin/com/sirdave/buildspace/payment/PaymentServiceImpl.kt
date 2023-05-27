@@ -3,6 +3,8 @@ package com.sirdave.buildspace.payment
 import com.google.gson.Gson
 import com.sirdave.buildspace.exception.PaymentException
 import com.sirdave.buildspace.helper.Status
+import com.sirdave.buildspace.helper.formatDate
+import com.sirdave.buildspace.helper.getSubscriptionType
 import com.sirdave.buildspace.transaction.Transaction
 import com.sirdave.buildspace.transaction.TransactionService
 import com.sirdave.buildspace.user.UserService
@@ -15,9 +17,6 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 import javax.transaction.Transactional
 
 
@@ -46,12 +45,14 @@ class PaymentServiceImpl(
         cardExpiryMonth: String,
         cardExpiryYear: String,
         pin: String,
-        subscriptionType: String
+        type: String
     ): Transaction {
 
         val user = userService.findUserByEmail(email)
         if (user.currentSubscription != null)
             throw IllegalStateException("Current subscription is still active for user")
+
+        val subscriptionType = getSubscriptionType(type)
 
         val card = Card(cardCvv, cardNumber, cardExpiryMonth, cardExpiryYear)
         val chargeRequest = ChargeRequest(email, (amount * 100).toString(), card, pin)
@@ -90,7 +91,7 @@ class PaymentServiceImpl(
             date = formatDate(dateToBeFormatted),
             status = Status.PENDING,
             userEmail = email,
-            subscriptionType = subscriptionType,
+            subscriptionType = subscriptionType.name,
             currency = response.data.currency ?: ""
         )
 
@@ -110,11 +111,5 @@ class PaymentServiceImpl(
             transaction.status = Status.COMPLETED
             publisher.publishEvent(transaction)
         }
-    }
-
-    private fun formatDate(date: String): LocalDateTime {
-        val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        val formatter = DateTimeFormatter.ofPattern(pattern, Locale.getDefault())
-        return LocalDateTime.parse(date, formatter)
     }
 }

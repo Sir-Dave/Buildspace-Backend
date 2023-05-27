@@ -11,7 +11,7 @@ interface  PaymentService {
                cardExpiryMonth: String,
                cardExpiryYear: String,
                pin: String,
-               subscriptionType: String
+               type: String
     ): Transaction
 
     fun retrievePaymentStatus(payload: String)
