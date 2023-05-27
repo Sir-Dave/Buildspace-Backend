@@ -13,3 +13,10 @@ enum class SubscriptionType(val amount: Double, val numberOfDays: Int){
     WEEKLY(2500.0, 7),
     MONTHLY(7000.0, 28)
 }
+
+enum class Status {
+    PENDING,
+    CONFIRMED,
+    COMPLETED,
+    CANCELLED
+}
