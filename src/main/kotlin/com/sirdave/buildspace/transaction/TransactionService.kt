@@ -8,5 +8,5 @@ interface TransactionService {
 
     fun updateTransactionStatus(id: Long, status: String): Transaction
 
-    fun saveTransaction(transaction: Transaction)
+    fun saveTransaction(transaction: Transaction): Transaction
 }

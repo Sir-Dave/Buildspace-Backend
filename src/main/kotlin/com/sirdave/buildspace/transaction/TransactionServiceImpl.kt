@@ -26,8 +26,8 @@ class TransactionServiceImpl(private val repository: TransactionRepository): Tra
         return transaction
     }
 
-    override fun saveTransaction(transaction: Transaction) {
-        repository.save(transaction)    //TODO: Might have to do checks here later, using references
+    override fun saveTransaction(transaction: Transaction): Transaction {
+        return repository.save(transaction)    //TODO: Might have to do checks here later, using references
     }
 
     private fun isValidStatus(status: String): Boolean{
