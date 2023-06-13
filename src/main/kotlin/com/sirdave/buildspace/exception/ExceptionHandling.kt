@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.LockedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
+import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -94,6 +95,13 @@ class ExceptionHandling: ErrorController {
     fun httpMessageNotReadableException(exception: HttpMessageNotReadableException): ResponseEntity<ApiResponse>{
         LOGGER.error(exception.message)
         return createHttpResponse(HttpStatus.BAD_REQUEST, "Invalid request payload")
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException::class)
+    fun missingServletRequestParameterException(
+        exception: MissingServletRequestParameterException): ResponseEntity<ApiResponse>{
+        LOGGER.error(exception.message)
+        return createHttpResponse(HttpStatus.BAD_REQUEST, exception.message)
     }
 
     @ExceptionHandler(Exception::class)
