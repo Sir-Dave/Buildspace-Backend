@@ -37,7 +37,7 @@ data class Data(
     @JsonProperty("transaction_date")
     val transactionDate: String?,
 
-    val status: Boolean?,
+    val status: String?,
     val reference: String?,
     val domain: String?,
 
