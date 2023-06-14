@@ -1,14 +1,9 @@
 package com.sirdave.buildspace.payment
 
-import com.sirdave.buildspace.transaction.Transaction
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(path = ["api/v1/payments"])
@@ -24,7 +19,7 @@ class PaymentController(private val paymentService: PaymentService) {
                     @RequestParam cardExpiryYear: String,
                     @RequestParam pin: String,
                     @RequestParam subscriptionType: String
-    ): ResponseEntity<Transaction> {
+    ): ResponseEntity<TransactionResponse> {
 
         val response = paymentService.charge(
             email, amount, cardCvv, cardNumber,
@@ -32,6 +27,15 @@ class PaymentController(private val paymentService: PaymentService) {
             subscriptionType
         )
         return ResponseEntity(response, HttpStatus.CREATED)
+    }
+
+    @Operation(summary = "Send OTP.")
+    @PostMapping("/send-otp")
+    fun sendOTP(@RequestParam otp: String,
+                @RequestParam reference: String): ResponseEntity<TransactionResponse> {
+
+        val response = paymentService.sendOTP(otp, reference)
+        return ResponseEntity(response, HttpStatus.OK)
     }
 
     @Operation(summary = "Webhook to retrieve status of transaction")
