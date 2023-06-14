@@ -2,6 +2,7 @@ package com.sirdave.buildspace.listeners
 
 import com.sirdave.buildspace.event.PaymentSuccessEvent
 import com.sirdave.buildspace.helper.Status
+import com.sirdave.buildspace.helper.formatDate
 import com.sirdave.buildspace.subscription.SubscriptionService
 import com.sirdave.buildspace.transaction.TransactionService
 import org.springframework.context.event.EventListener
@@ -15,19 +16,23 @@ class PaymentListener(
 
     @EventListener
     fun onPaymentEvent(event: PaymentSuccessEvent){
-        val transaction = event.transaction
+        var transaction = event.transaction
+        val response = event.payload
 
         if (transaction.status == Status.PENDING){
 
-            transactionService.updateTransactionStatus(
-                transaction.id!!, Status.COMPLETED.name
+            transaction = transactionService.updateTransaction(
+                response.data.reference!!,
+                amount = response.data.amount,
+                date = if (response.data.paidAt == null) null else formatDate(response.data.paidAt),
+                status = Status.COMPLETED,
+                currency = response.data.currency ?: "NGN"
             )
 
             subscriptionService.createSubscription(
-                transaction.userEmail,
-                transaction.subscriptionType
+                transaction.userEmail!!,
+                transaction.subscriptionType!!
             )
         }
-
     }
 }
