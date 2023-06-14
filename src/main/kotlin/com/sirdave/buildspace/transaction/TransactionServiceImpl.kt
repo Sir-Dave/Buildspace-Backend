@@ -3,7 +3,7 @@ package com.sirdave.buildspace.transaction
 import com.sirdave.buildspace.exception.EntityNotFoundException
 import com.sirdave.buildspace.helper.Status
 import org.springframework.stereotype.Service
-import java.util.*
+import java.time.LocalDateTime
 import javax.transaction.Transactional
 
 @Service
@@ -20,26 +20,24 @@ class TransactionServiceImpl(private val repository: TransactionRepository): Tra
     }
 
     @Transactional
-    override fun updateTransactionStatus(id: Long, status: String): Transaction {
-        val transaction = findTransactionById(id)
-        transaction.status = getStatus(status)
+    override fun updateTransaction(
+        reference: String,
+        amount: Double?,
+        date: LocalDateTime?,
+        status: Status,
+        currency: String
+    ): Transaction {
+        val transaction = findTransactionByReference(reference)
+        transaction.apply {
+            this.amount = amount
+            this.date = date
+            this.status = status
+            this.currency = currency
+        }
         return transaction
     }
 
     override fun saveTransaction(transaction: Transaction): Transaction {
         return repository.save(transaction)
-    }
-
-    private fun isValidStatus(status: String): Boolean{
-        return Arrays.stream(Status.values()).anyMatch {
-            it.name.equals(status, ignoreCase = true)
-        }
-    }
-
-    private fun getStatus(status: String): Status{
-        check(isValidStatus(status)){
-            throw IllegalStateException("Invalid status")
-        }
-        return Status.valueOf(status)
     }
 }
