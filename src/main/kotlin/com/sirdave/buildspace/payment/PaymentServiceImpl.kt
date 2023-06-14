@@ -46,7 +46,7 @@ class PaymentServiceImpl(
         cardExpiryYear: String,
         pin: String,
         type: String
-    ): Transaction {
+    ): TransactionResponse {
 
         val user = userService.findUserByEmail(email)
         if (user.currentSubscription != null)
@@ -83,19 +83,53 @@ class PaymentServiceImpl(
         val response = gson.fromJson(httpResponse.body(), TransactionResponse::class.java)
         logger.info("Charge API: response is $response")
 
-        val dateToBeFormatted = response.data.paidAt ?: ""
 
         val transaction = Transaction(
-            amount = response.data.amount ?: 0.0,
+            amount = response.data.amount,
             reference = response.data.reference ?: "",
-            date = formatDate(dateToBeFormatted),
+            date = if (response.data.paidAt == null) null
+            else formatDate(response.data.paidAt),
             status = Status.PENDING,
             userEmail = email,
             subscriptionType = subscriptionType.name,
-            currency = response.data.currency ?: ""
+            currency = response.data.currency ?: "NGN"
         )
 
-        return transactionService.saveTransaction(transaction)
+        transactionService.saveTransaction(transaction)
+        return response
+    }
+
+    override fun sendOTP(otp: String, reference: String): TransactionResponse {
+        val otpRequest = OTPRequest(otp, reference)
+
+        val jsonRequest = gson.toJson(otpRequest)
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI("${BASE_URL}/charge/submit_otp"))
+            .header("Authorization", "Bearer $secretKey")
+            .POST(HttpRequest.BodyPublishers.ofString(jsonRequest))
+            .build()
+
+
+        val httpClient = HttpClient.newHttpClient()
+        val httpResponse: HttpResponse<String>
+        try {
+            httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+        }
+        catch (exception: Exception){
+            logger.error("Submit OTP Error: ${exception.message}")
+            throw IOException("An error occurred while processing your request")
+        }
+
+        if (httpResponse.statusCode() !in listOf(200, 201)){
+            logger.error("Submit OTP Error: ${httpResponse.body()}")
+            throw PaymentException("An error occurred while charging your card")
+        }
+
+        val response = gson.fromJson(httpResponse.body(), TransactionResponse::class.java)
+        logger.info("Submit OTP Request: response is $response")
+
+        return response
     }
 
     override fun retrievePaymentStatus(payload: String) {
@@ -106,7 +140,7 @@ class PaymentServiceImpl(
         if (event == "charge.success"){
             val transaction = transactionService.findTransactionByReference(
                 parsedPayload.data.reference!!)
-            publisher.publishEvent(PaymentSuccessEvent(transaction))
+            publisher.publishEvent(PaymentSuccessEvent(transaction, parsedPayload))
         }
     }
 }

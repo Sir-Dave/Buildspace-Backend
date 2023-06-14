@@ -11,6 +11,11 @@ data class ChargeRequest(
     val pin: String
 )
 
+data class OTPRequest(
+    val otp: String,
+    val reference: String
+)
+
 data class Card(
     val cvv: String,
 

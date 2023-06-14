@@ -1,7 +1,5 @@
 package com.sirdave.buildspace.payment
 
-import com.sirdave.buildspace.transaction.Transaction
-
 interface  PaymentService {
 
     fun charge(email: String,
@@ -12,7 +10,9 @@ interface  PaymentService {
                cardExpiryYear: String,
                pin: String,
                type: String
-    ): Transaction
+    ): TransactionResponse
+
+    fun sendOTP(otp: String, reference: String): TransactionResponse
 
     fun retrievePaymentStatus(payload: String)
 }
