@@ -9,7 +9,7 @@ interface TransactionService {
 
     fun findTransactionByReference(reference: String): Transaction
 
-    fun updateTransaction(reference: String,
+    fun updateTransaction(transaction: Transaction,
                           amount: Double?,
                           date: LocalDateTime?,
                           status: Status,

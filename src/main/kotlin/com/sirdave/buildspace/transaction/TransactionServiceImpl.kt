@@ -21,13 +21,12 @@ class TransactionServiceImpl(private val repository: TransactionRepository): Tra
 
     @Transactional
     override fun updateTransaction(
-        reference: String,
+        transaction: Transaction,
         amount: Double?,
         date: LocalDateTime?,
         status: Status,
         currency: String
     ): Transaction {
-        val transaction = findTransactionByReference(reference)
         transaction.apply {
             this.amount = amount
             this.date = date

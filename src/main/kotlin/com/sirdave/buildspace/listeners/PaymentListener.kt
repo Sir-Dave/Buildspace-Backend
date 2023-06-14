@@ -22,7 +22,7 @@ class PaymentListener(
         if (transaction.status == Status.PENDING){
 
             transaction = transactionService.updateTransaction(
-                response.data.reference!!,
+                transaction,
                 amount = response.data.amount,
                 date = if (response.data.paidAt == null) null else formatDate(response.data.paidAt),
                 status = Status.COMPLETED,
