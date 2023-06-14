@@ -6,21 +6,39 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "transactions")
-class Transaction (
-    val amount: Double,
-    val reference: String,
-    val date: LocalDateTime,
+class Transaction(var reference: String){
+    var amount: Double? = null
+    var date: LocalDateTime? = null
 
     @Enumerated(EnumType.STRING)
-    var status: Status,
+    var status: Status? = null
 
-    val userEmail: String,
-    val subscriptionType: String,
+    var userEmail: String? = null
+    var subscriptionType: String? = null
 
-    val currency: String = "NGN"){
+    var currency: String = "NGN"
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_sequence")
     @SequenceGenerator(name = "transaction_sequence", sequenceName = "transaction_sequence", allocationSize = 1)
     @Column(nullable = false, updatable = false)
     val id: Long? = null
+
+
+    constructor(amount: Double?,
+                reference: String,
+                date: LocalDateTime?,
+                status: Status,
+                userEmail: String,
+                subscriptionType: String,
+                currency: String): this(reference){
+
+        this.amount = amount
+        this.reference = reference
+        this.date = date
+        this.status = status
+        this.userEmail = userEmail
+        this.subscriptionType = subscriptionType
+        this.currency = currency
+    }
 }
