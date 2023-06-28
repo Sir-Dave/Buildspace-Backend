@@ -10,6 +10,6 @@ interface TransactionRepository: JpaRepository<Transaction, Long> {
 
     fun findTransactionByReference(reference: String): Optional<Transaction>
 
-    @Query("SELECT t FROM Transaction t WHERE t.email = ?1 ORDER BY t.date DESC")
+    @Query("SELECT t FROM Transaction t WHERE t.userEmail = ?1 ORDER BY t.date DESC")
     fun findAllTransactionsByEmail(email: String): Set<Transaction>
 }
