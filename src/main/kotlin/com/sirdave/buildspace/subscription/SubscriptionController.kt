@@ -11,6 +11,13 @@ import java.util.*
 @RequestMapping(path = ["/api/v1/subscriptions"])
 class SubscriptionController(private val subscriptionService: SubscriptionService) {
 
+    @Operation(summary = "Show a list of available subscription plans")
+    @GetMapping("/plans")
+    fun getAllSubscriptionPlans(): ResponseEntity<List<SubscriptionPlan>>{
+        val plans = subscriptionService.getAllSubscriptionPlans()
+        return ResponseEntity(plans, HttpStatus.OK)
+    }
+
     @Operation(summary = "Get all subscriptions by a user")
     @GetMapping
     fun getAllSubscriptionsByUser(@RequestParam userId: String): ResponseEntity<Set<SubscriptionDto>>{

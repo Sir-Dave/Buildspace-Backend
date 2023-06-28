@@ -1,8 +1,10 @@
 package com.sirdave.buildspace.subscription
 
 import com.sirdave.buildspace.exception.EntityNotFoundException
+import com.sirdave.buildspace.helper.SubscriptionType
 import com.sirdave.buildspace.helper.getSubscriptionType
 import com.sirdave.buildspace.mapper.toSubscriptionDto
+import com.sirdave.buildspace.mapper.toSubscriptionPlan
 import com.sirdave.buildspace.user.UserService
 import org.springframework.stereotype.Service
 import java.util.*
@@ -42,5 +44,11 @@ class SubscriptionServiceImpl(
         subscription.addToUserSubscription(user)
         user.renewSubscription(subscription)
         repository.save(subscription)
+    }
+
+    override fun getAllSubscriptionPlans(): List<SubscriptionPlan> {
+        return SubscriptionType.values().map{
+            it.toSubscriptionPlan()
+        }
     }
 }
