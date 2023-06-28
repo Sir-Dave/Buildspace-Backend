@@ -12,14 +12,14 @@ class TransactionController(private val transactionService: TransactionService) 
 
     @Operation(summary = "Get all transactions by a user")
     @GetMapping
-    fun getAllSubscriptionsByUser(@RequestParam email: String): ResponseEntity<Set<TransactionDto>>{
+    fun getAllTransactionsByUser(@RequestParam email: String): ResponseEntity<Set<TransactionDto>>{
         val transactions = transactionService.getUserTransactions(email)
         return ResponseEntity(transactions, HttpStatus.OK)
     }
 
     @Operation(summary = "Get details of one transaction")
     @GetMapping("/{id}")
-    fun getSubscriptionById(@PathVariable("id") id: Long): ResponseEntity<TransactionDto>{
+    fun getTransactionById(@PathVariable("id") id: Long): ResponseEntity<TransactionDto>{
         val transaction = transactionService.findTransactionById(id).toTransactionDto()
         return ResponseEntity(transaction, HttpStatus.OK)
     }
