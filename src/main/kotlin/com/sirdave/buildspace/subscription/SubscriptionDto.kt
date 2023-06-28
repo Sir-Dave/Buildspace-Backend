@@ -10,3 +10,9 @@ data class SubscriptionDto (
     val isExpired: Boolean,
     var user: UserDto
 )
+
+data class SubscriptionPlan(
+    val name: String,
+    val amount: Double,
+    val numberOfDays: Int,
+)
