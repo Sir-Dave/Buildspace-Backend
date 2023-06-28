@@ -2,6 +2,7 @@ package com.sirdave.buildspace.transaction
 
 import com.sirdave.buildspace.exception.EntityNotFoundException
 import com.sirdave.buildspace.helper.Status
+import com.sirdave.buildspace.mapper.toTransactionDto
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import javax.transaction.Transactional
@@ -17,6 +18,12 @@ class TransactionServiceImpl(private val repository: TransactionRepository): Tra
     override fun findTransactionByReference(reference: String): Transaction {
         return repository.findTransactionByReference(reference)
             .orElseThrow { EntityNotFoundException("Transaction not found") }
+    }
+
+    override fun getUserTransactions(email: String): Set<TransactionDto> {
+        return repository.findAllTransactionsByEmail(email).map {
+            it.toTransactionDto()
+        }.toSet()
     }
 
     @Transactional

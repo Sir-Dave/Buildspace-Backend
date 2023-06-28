@@ -9,6 +9,8 @@ interface TransactionService {
 
     fun findTransactionByReference(reference: String): Transaction
 
+    fun getUserTransactions(email: String): Set<TransactionDto>
+
     fun updateTransaction(transaction: Transaction,
                           amount: Double?,
                           date: LocalDateTime?,
