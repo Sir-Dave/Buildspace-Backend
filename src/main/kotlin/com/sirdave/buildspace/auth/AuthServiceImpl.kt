@@ -49,11 +49,12 @@ class AuthServiceImpl(
             dateJoined = LocalDateTime.now(),
             role = role.name,
             authorities = role.authorities,
-            isActive = false,
+            isActive = true,
             isNotLocked = true
         )
         userService.saveUser(user)
-        publisher.publishEvent(AuthEvent(user, servletRequest.requestURL.toString()))
+        //TODO: Set isActive to false and send email once email server has been set up
+        //publisher.publishEvent(AuthEvent(user, servletRequest.requestURL.toString()))
     }
 
     private fun validateLoginAttempt(user: User){
