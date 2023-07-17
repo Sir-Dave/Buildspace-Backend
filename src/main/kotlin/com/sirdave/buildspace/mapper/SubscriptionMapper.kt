@@ -20,6 +20,7 @@ fun Subscription.toSubscriptionDto(): SubscriptionDto {
         startDate = dtoStartDate,
         endDate = dtoEndDate,
         type = type.name,
+        amount = type.amount,
         isExpired = isExpired,
         user = user.toUserDto()
     )

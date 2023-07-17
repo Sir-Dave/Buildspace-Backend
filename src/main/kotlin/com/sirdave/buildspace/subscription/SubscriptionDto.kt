@@ -7,6 +7,7 @@ data class SubscriptionDto (
     val startDate: String,
     val endDate: String,
     val type: String,
+    val amount: Double,
     val isExpired: Boolean,
     var user: UserDto
 )
