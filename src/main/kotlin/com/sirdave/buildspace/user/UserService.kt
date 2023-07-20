@@ -13,4 +13,6 @@ interface UserService {
     fun isUserDoesNotExist(email: String): Boolean
 
     fun getAllUsers(page: Int, pageSize: Int): List<UserDto>
+
+    fun retrieveAllUsers(): List<User>
 }

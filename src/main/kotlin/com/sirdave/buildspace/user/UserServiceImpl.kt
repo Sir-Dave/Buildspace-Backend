@@ -39,4 +39,8 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService{
         val pagedResult = userRepository.getAllUsers(pageable)
         return if (pagedResult.hasContent()) pagedResult.content.map { it.toUserDto() } else emptyList()
     }
+
+    override fun retrieveAllUsers(): List<User> {
+        return userRepository.findAll()
+    }
 }
