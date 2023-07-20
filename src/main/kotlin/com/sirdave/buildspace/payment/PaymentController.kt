@@ -26,7 +26,7 @@ class PaymentController(private val paymentService: PaymentService) {
             cardExpiryMonth, cardExpiryYear, pin,
             subscriptionType
         )
-        return ResponseEntity(response, HttpStatus.CREATED)
+        return response
     }
 
     @Operation(summary = "Send OTP.")

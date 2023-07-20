@@ -1,5 +1,7 @@
 package com.sirdave.buildspace.payment
 
+import org.springframework.http.ResponseEntity
+
 interface  PaymentService {
 
     fun charge(email: String,
@@ -10,7 +12,7 @@ interface  PaymentService {
                cardExpiryYear: String,
                pin: String,
                type: String
-    ): TransactionResponse
+    ): ResponseEntity<TransactionResponse>
 
     fun sendOTP(otp: String, reference: String): TransactionResponse
 

@@ -12,6 +12,8 @@ import com.sirdave.buildspace.user.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.io.IOException
 import java.net.URI
@@ -46,7 +48,7 @@ class PaymentServiceImpl(
         cardExpiryYear: String,
         pin: String,
         type: String
-    ): TransactionResponse {
+    ): ResponseEntity<TransactionResponse> {
 
         val user = userService.findUserByEmail(email)
         if (user.currentSubscription != null)
@@ -96,7 +98,12 @@ class PaymentServiceImpl(
         )
 
         transactionService.saveTransaction(transaction)
-        return response
+
+        if (response.data.status == "send_otp"){
+            return ResponseEntity(response, HttpStatus.ACCEPTED)
+        }
+
+        return ResponseEntity(response, HttpStatus.CREATED)
     }
 
     override fun sendOTP(otp: String, reference: String): TransactionResponse {
