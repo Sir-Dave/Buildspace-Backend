@@ -7,9 +7,7 @@ Server-side application for BuildSpace Mobile App.
 - Implement Sign up with Google (OAUTH)
 - Containerize the app using Docker (maybe)
 - CI/CD with Github Actions
-- Run cron jobs once every day to check for valid user subscriptions (admin side)
-- Integrate payments and use webhooks
-- Deploy
+- Run cron jobs once every day to remove expired user subscriptions
 
 #### Technologies and Frameworks used:
 - Java 11

@@ -7,7 +7,6 @@ import org.hibernate.annotations.Parameter
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
-import kotlin.jvm.Transient
 
 @Entity
 @Table(name = "subscriptions")
@@ -38,8 +37,9 @@ class Subscription(
 
     val endDate: LocalDateTime = startDate.plusDays(type.numberOfDays.toLong())
 
-    @Transient
-    val isExpired: Boolean = endDate.isBefore(LocalDateTime.now())
+    fun isExpired(): Boolean {
+        return endDate.isBefore(LocalDateTime.now())
+    }
 
     fun addToUserSubscription(user: User) {
         user.addSubscription(this)
