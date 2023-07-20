@@ -53,7 +53,7 @@ class User (
         currentSubscription = subscription
     }
 
-    fun cancelSubscription(){
+    fun removeExpiredSubscription(){
         currentSubscription = null
     }
 

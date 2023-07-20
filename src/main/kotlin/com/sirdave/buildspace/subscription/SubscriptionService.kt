@@ -13,4 +13,6 @@ interface SubscriptionService {
     fun createSubscription(userEmail: String, type: String)
 
     fun getAllSubscriptionPlans(): List<SubscriptionPlan>
+
+    fun setExpiredFields()
 }

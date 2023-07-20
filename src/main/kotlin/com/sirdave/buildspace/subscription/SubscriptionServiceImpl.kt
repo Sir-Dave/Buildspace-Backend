@@ -6,13 +6,18 @@ import com.sirdave.buildspace.helper.getSubscriptionType
 import com.sirdave.buildspace.mapper.toSubscriptionDto
 import com.sirdave.buildspace.mapper.toSubscriptionPlan
 import com.sirdave.buildspace.user.UserService
+import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.transaction.Transactional
 
 @Service
 class SubscriptionServiceImpl(
     private val repository: SubscriptionRepository,
     private val userService: UserService): SubscriptionService {
+
+    private val logger = LoggerFactory.getLogger(javaClass.simpleName)
 
     override fun findById(id: UUID): Subscription {
         return repository.findById(id)
@@ -49,6 +54,18 @@ class SubscriptionServiceImpl(
     override fun getAllSubscriptionPlans(): List<SubscriptionPlan> {
         return SubscriptionType.values().map{
             it.toSubscriptionPlan()
+        }
+    }
+
+    @Scheduled(cron = "0 0 0,12 * * *")
+    @Transactional
+    override fun setExpiredFields() {
+        logger.info("Cron job: Removing expired subscriptions")
+        val users = userService.retrieveAllUsers()
+        users.map { user ->
+            if (user.currentSubscription != null && user.currentSubscription!!.isExpired()){
+                user.removeExpiredSubscription()
+            }
         }
     }
 }
