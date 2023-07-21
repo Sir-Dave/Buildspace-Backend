@@ -14,5 +14,7 @@ interface SubscriptionService {
 
     fun getAllSubscriptionPlans(): List<SubscriptionPlan>
 
+    fun removeExpiredSubscriptions()
+
     fun setExpiredFields()
 }

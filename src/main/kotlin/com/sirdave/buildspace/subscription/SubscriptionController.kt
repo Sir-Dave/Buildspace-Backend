@@ -1,5 +1,6 @@
 package com.sirdave.buildspace.subscription
 
+import com.sirdave.buildspace.helper.ApiResponse
 import com.sirdave.buildspace.mapper.toSubscriptionDto
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.HttpStatus
@@ -38,6 +39,19 @@ class SubscriptionController(private val subscriptionService: SubscriptionServic
     fun getCurrentUserSubscription(@RequestParam userId: String): ResponseEntity<SubscriptionDto>{
         val subscription = subscriptionService.getUserCurrentSubscription(UUID.fromString(userId))
         return ResponseEntity(subscription, HttpStatus.OK)
+    }
+
+    @Operation(summary = "Remove subscription")
+    @PostMapping("/remove-subscriptions")
+    fun removeExpiredSubscriptions(): ResponseEntity<ApiResponse>{
+        subscriptionService.setExpiredFields()
+        val response = ApiResponse(
+            HttpStatus.OK.value(),
+            HttpStatus.OK,
+            HttpStatus.OK.reasonPhrase,
+            "Removed expired subscriptions successfully."
+        )
+        return ResponseEntity(response, HttpStatus.OK)
     }
 
 }

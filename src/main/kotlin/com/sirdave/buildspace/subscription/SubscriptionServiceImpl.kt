@@ -57,13 +57,23 @@ class SubscriptionServiceImpl(
         }
     }
 
-    @Scheduled(cron = "0 0 0,12 * * *")
+    @Scheduled(cron = "0 0 * * * *")
     @Transactional
-    override fun setExpiredFields() {
+    override fun removeExpiredSubscriptions() {
         logger.info("Cron job: Removing expired subscriptions")
         val users = userService.retrieveAllUsers()
         users.map { user ->
             if (user.currentSubscription != null && user.currentSubscription!!.isExpired()){
+                user.removeExpiredSubscription()
+            }
+        }
+    }
+
+    @Transactional
+    override fun setExpiredFields() {
+        val users = userService.retrieveAllUsers()
+        users.map { user ->
+            if (user.currentSubscription != null){
                 user.removeExpiredSubscription()
             }
         }
