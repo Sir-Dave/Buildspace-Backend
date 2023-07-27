@@ -1,14 +1,17 @@
 package com.sirdave.buildspace.auth
 
-import com.sirdave.buildspace.event.AuthEvent
 import com.sirdave.buildspace.exception.EntityExistsException
 import com.sirdave.buildspace.exception.PasswordsDoNotMatchException
 import com.sirdave.buildspace.helper.Role
+import com.sirdave.buildspace.mapper.toUserDto
+import com.sirdave.buildspace.security.JwtTokenProvider
 import com.sirdave.buildspace.user.User
 import com.sirdave.buildspace.user.UserPrincipal
 import com.sirdave.buildspace.user.UserService
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -24,6 +27,8 @@ class AuthServiceImpl(
     private val passwordEncoder: BCryptPasswordEncoder,
     private val publisher: ApplicationEventPublisher,
     private val loginAttemptService: LoginAttemptService,
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val authenticationManager: AuthenticationManager,
 ) : AuthService, UserDetailsService {
 
     override fun loadUserByUsername(email: String): UserDetails {
@@ -55,6 +60,21 @@ class AuthServiceImpl(
         userService.saveUser(user)
         //TODO: Set isActive to false and send email once email server has been set up
         //publisher.publishEvent(AuthEvent(user, servletRequest.requestURL.toString()))
+    }
+
+    override fun login(signInRequest: SignInRequest): SignInResponse {
+        authenticateUser(signInRequest.email, signInRequest.password)
+        val user = userService.findUserByEmail(signInRequest.email)
+
+        val userPrincipal = UserPrincipal(user)
+        val token = jwtTokenProvider.generateJwtToken(userPrincipal)
+        return SignInResponse(token, user.toUserDto())
+    }
+
+    private fun authenticateUser(email: String, password: String){
+        authenticationManager.authenticate(
+            UsernamePasswordAuthenticationToken(email, password)
+        )
     }
 
     private fun validateLoginAttempt(user: User){
