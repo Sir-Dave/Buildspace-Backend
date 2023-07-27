@@ -1,8 +1,12 @@
 package com.sirdave.buildspace.security
 
+import com.auth0.jwt.exceptions.TokenExpiredException
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.sirdave.buildspace.constants.SecurityConstants
+import com.sirdave.buildspace.helper.ApiResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
@@ -23,14 +27,30 @@ class JwtAuthorizationFilter(private val jwtTokenProvider: JwtTokenProvider) : O
                 return
             }
             val token = header.substring(SecurityConstants.TOKEN_PREFIX.length)
-            val username = jwtTokenProvider.getSubject(token)
-            if (jwtTokenProvider.isTokenValid(username, token) &&
-                SecurityContextHolder.getContext().authentication == null){
-                val authorities = jwtTokenProvider.getAuthorities(token)
-                val authentication = jwtTokenProvider.getAuthentication(username, authorities, request)
-                SecurityContextHolder.getContext().authentication = authentication
+
+            try {
+                val username = jwtTokenProvider.getSubject(token)
+                if (jwtTokenProvider.isTokenValid(username, token) &&
+                    SecurityContextHolder.getContext().authentication == null){
+                    val authorities = jwtTokenProvider.getAuthorities(token)
+                    val authentication = jwtTokenProvider.getAuthentication(username, authorities, request)
+                    SecurityContextHolder.getContext().authentication = authentication
+                }
+                else SecurityContextHolder.clearContext()
             }
-            else SecurityContextHolder.clearContext()
+            catch (exception: TokenExpiredException){
+                val apiResponse = ApiResponse(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED,
+                    HttpStatus.UNAUTHORIZED.reasonPhrase, "Token has expired, login to continue")
+                response.contentType = MediaType.APPLICATION_JSON_VALUE
+                response.status = HttpStatus.UNAUTHORIZED.value()
+                val outputStream = response.outputStream
+                val mapper = ObjectMapper()
+                mapper.writeValue(outputStream, apiResponse)
+                outputStream.flush()
+                return
+            }
+
+
         }
 
         filterChain.doFilter(request, response)

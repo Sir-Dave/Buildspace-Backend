@@ -61,7 +61,7 @@ class JwtTokenProvider {
 
     private fun isTokenExpired(verifier: JWTVerifier, token: String): Boolean{
         val expirationDate = verifier.verify(token).expiresAt
-        return expirationDate.before(Date())
+        return  expirationDate.before(Date())
     }
 
     private fun getClaimsFromUser(userPrincipal: UserPrincipal): Array<String>{
