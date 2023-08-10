@@ -18,6 +18,22 @@ class UserController(private val userService: UserService) {
         return ResponseEntity(user, HttpStatus.OK)
     }
 
+    @Operation(summary = "Update user info")
+    @PutMapping("/{id}")
+    fun updateUser(@PathVariable("id") id: String,
+                   @RequestParam firstName: String?,
+                   @RequestParam lastName: String?,
+                   @RequestParam phoneNumber: String?
+    ): ResponseEntity<UserDto> {
+        val user = userService.updateUser(
+            id = UUID.fromString(id),
+            firstName = firstName,
+            lastName = lastName,
+            phoneNumber = phoneNumber
+        ).toUserDto()
+        return ResponseEntity(user, HttpStatus.OK)
+    }
+
     @Operation(summary = "Get all users. Endpoint accessible only to users with admin roles")
     @GetMapping
     fun getAllUsers(

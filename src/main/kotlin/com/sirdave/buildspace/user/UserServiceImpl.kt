@@ -28,6 +28,23 @@ class UserServiceImpl(private val userRepository: UserRepository) : UserService{
 
     }
 
+    @Transactional
+    @PreAuthorize("@authenticatedUserService.hasId(#id)")
+    override fun updateUser(id: UUID, firstName: String?,
+                            lastName: String?, phoneNumber: String?): User {
+        val user = findUserById(id)
+        if (!firstName.isNullOrBlank())
+            user.firstName = firstName
+
+        if (!lastName.isNullOrBlank())
+            user.lastName = lastName
+
+        if (!phoneNumber.isNullOrBlank())
+            user.phoneNumber = phoneNumber
+
+        return user
+    }
+
     override fun isUserDoesNotExist(email: String): Boolean {
         val userByEmail = userRepository.findByEmail(email)
         return userByEmail.isEmpty
