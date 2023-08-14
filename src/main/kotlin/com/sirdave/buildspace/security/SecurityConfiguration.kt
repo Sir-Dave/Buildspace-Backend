@@ -1,5 +1,6 @@
 package com.sirdave.buildspace.security
 
+import com.sirdave.buildspace.auth.LogoutService
 import com.sirdave.buildspace.constants.SecurityConstants
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -27,6 +29,7 @@ class SecurityConfiguration(
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
     private val jwtAuthorizationFilter: JwtAuthorizationFilter,
+    private val logoutService: LogoutService,
     @Lazy
     @Qualifier("userDetailsService")
     private val userDetailsService: UserDetailsService) : WebSecurityConfigurerAdapter() {
@@ -46,6 +49,12 @@ class SecurityConfiguration(
             .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
             .authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
             .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .logout()
+            .logoutUrl("/api/v1/auth/logout")
+            .addLogoutHandler(logoutService)
+            .logoutSuccessHandler { _, _, _ ->
+                SecurityContextHolder.clearContext()
+            }
     }
 
     // Used by spring security if CORS is enabled.

@@ -15,7 +15,10 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class JwtAuthorizationFilter(private val jwtTokenProvider: JwtTokenProvider) : OncePerRequestFilter() {
+class JwtAuthorizationFilter(
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val jwtTokenService: JwtTokenService
+    ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         if (request.method.equals(SecurityConstants.OPTIONS_HTTP_METHOD, ignoreCase = true))
@@ -27,10 +30,11 @@ class JwtAuthorizationFilter(private val jwtTokenProvider: JwtTokenProvider) : O
                 return
             }
             val token = header.substring(SecurityConstants.TOKEN_PREFIX.length)
+            val isTokenValid = jwtTokenService.getLogoutEventForToken(token) == null
 
             try {
                 val username = jwtTokenProvider.getSubject(token)
-                if (jwtTokenProvider.isTokenValid(username, token) &&
+                if (jwtTokenProvider.isTokenValid(username, token) && isTokenValid &&
                     SecurityContextHolder.getContext().authentication == null){
                     val authorities = jwtTokenProvider.getAuthorities(token)
                     val authentication = jwtTokenProvider.getAuthentication(username, authorities, request)
