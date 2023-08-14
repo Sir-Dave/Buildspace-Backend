@@ -59,6 +59,11 @@ class JwtTokenProvider {
         return verifier.verify(token).subject
     }
 
+    fun getExpirationDate(token: String): Date{
+        val verifier = getJWTVerifier()
+        return verifier.verify(token).expiresAt
+    }
+
     private fun isTokenExpired(verifier: JWTVerifier, token: String): Boolean{
         val expirationDate = verifier.verify(token).expiresAt
         return  expirationDate.before(Date())
