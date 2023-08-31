@@ -30,6 +30,7 @@ fun SubscriptionType.toSubscriptionPlan(): SubscriptionPlan{
     return SubscriptionPlan(
         name = name,
         amount = amount,
-        numberOfDays = numberOfDays
+        numberOfDays = numberOfDays,
+        type = type
     )
 }

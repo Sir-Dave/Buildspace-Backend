@@ -16,4 +16,5 @@ data class SubscriptionPlan(
     val name: String,
     val amount: Double,
     val numberOfDays: Int,
+    val type: String
 )
