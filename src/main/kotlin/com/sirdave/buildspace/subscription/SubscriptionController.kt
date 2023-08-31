@@ -12,10 +12,12 @@ import java.util.*
 @RequestMapping(path = ["/api/v1/subscriptions"])
 class SubscriptionController(private val subscriptionService: SubscriptionService) {
 
-    @Operation(summary = "Show a list of available subscription plans")
+    @Operation(summary = "Show a list of available subscription plans. Filter by individual or teams.")
     @GetMapping("/plans")
-    fun getAllSubscriptionPlans(): ResponseEntity<List<SubscriptionPlan>>{
-        val plans = subscriptionService.getAllSubscriptionPlans()
+    fun getAllSubscriptionPlans(
+        @RequestParam("category") category: String
+    ): ResponseEntity<List<SubscriptionPlan>>{
+        val plans = subscriptionService.getAllSubscriptionPlans(category)
         return ResponseEntity(plans, HttpStatus.OK)
     }
 

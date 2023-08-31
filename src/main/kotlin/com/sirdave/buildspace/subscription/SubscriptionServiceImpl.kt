@@ -51,10 +51,9 @@ class SubscriptionServiceImpl(
         repository.save(subscription)
     }
 
-    override fun getAllSubscriptionPlans(): List<SubscriptionPlan> {
-        return SubscriptionType.values().map{
-            it.toSubscriptionPlan()
-        }
+    override fun getAllSubscriptionPlans(type: String): List<SubscriptionPlan> {
+        return SubscriptionType.values().filter { it.type.equals(type, ignoreCase = true) }
+            .map{ it.toSubscriptionPlan() }
     }
 
     @Scheduled(cron = "0 0 * * * *")
