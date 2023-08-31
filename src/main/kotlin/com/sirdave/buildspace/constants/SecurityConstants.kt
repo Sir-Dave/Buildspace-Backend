@@ -1,7 +1,7 @@
 package com.sirdave.buildspace.constants
 
 object SecurityConstants {
-    const val EXPIRATION_DATE = 120_000 // 5 mins //604_800_000 // 7 days
+    const val EXPIRATION_DATE = 300_000 // 5 mins //604_800_000 // 7 days
     const val TOKEN_PREFIX = "Bearer "
     const val JWT_TOKEN_HEADER = "Jwt-Token"
     const val JWT_ISSUER = "BuildSpace Company"
