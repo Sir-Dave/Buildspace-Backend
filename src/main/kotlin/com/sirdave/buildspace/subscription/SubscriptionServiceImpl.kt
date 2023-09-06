@@ -51,7 +51,7 @@ class SubscriptionServiceImpl(
         repository.save(subscription)
     }
 
-    override fun getAllSubscriptionPlans(type: String): List<SubscriptionPlan> {
+    override fun getAllSubscriptionPlans(type: String): List<SubscriptionPlanDto> {
         return SubscriptionType.values().filter { it.type.equals(type, ignoreCase = true) }
             .map{ it.toSubscriptionPlan() }
     }

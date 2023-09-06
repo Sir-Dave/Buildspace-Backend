@@ -12,7 +12,7 @@ interface SubscriptionService {
 
     fun createSubscription(userEmail: String, type: String)
 
-    fun getAllSubscriptionPlans(type: String): List<SubscriptionPlan>
+    fun getAllSubscriptionPlans(type: String): List<SubscriptionPlanDto>
 
     fun removeExpiredSubscriptions()
 

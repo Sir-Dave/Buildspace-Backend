@@ -12,7 +12,7 @@ data class SubscriptionDto (
     var user: UserDto
 )
 
-data class SubscriptionPlan(
+data class SubscriptionPlanDto(
     val name: String,
     val amount: Double,
     val numberOfDays: Int,

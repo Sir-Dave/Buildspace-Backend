@@ -16,7 +16,7 @@ class SubscriptionController(private val subscriptionService: SubscriptionServic
     @GetMapping("/plans")
     fun getAllSubscriptionPlans(
         @RequestParam("category") category: String
-    ): ResponseEntity<List<SubscriptionPlan>>{
+    ): ResponseEntity<List<SubscriptionPlanDto>>{
         val plans = subscriptionService.getAllSubscriptionPlans(category)
         return ResponseEntity(plans, HttpStatus.OK)
     }
