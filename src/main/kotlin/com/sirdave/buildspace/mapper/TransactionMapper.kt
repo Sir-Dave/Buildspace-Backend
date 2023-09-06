@@ -18,7 +18,7 @@ fun Transaction.toTransactionDto(): TransactionDto{
         date = dtoDate ?: "Undefined",
         status = status!!.name,
         userEmail = userEmail!!,
-        subscriptionType =  subscriptionType!!,
+        subscriptionType = subscriptionPlan!!,
         currency = currency
     )
 

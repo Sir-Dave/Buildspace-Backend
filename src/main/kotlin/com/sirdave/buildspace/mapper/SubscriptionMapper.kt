@@ -19,8 +19,8 @@ fun Subscription.toSubscriptionDto(): SubscriptionDto {
         id = id.toString(),
         startDate = dtoStartDate,
         endDate = dtoEndDate,
-        type = type,
-        amount = amount,
+        type = plan.name,
+        amount = plan.amount,
         isExpired = isExpired(),
         user = user.toUserDto()
     )
