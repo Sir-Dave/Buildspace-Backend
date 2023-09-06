@@ -53,7 +53,7 @@ class SubscriptionPlanServiceImpl(
         return plan
     }
 
-    override fun getPlanByType(type: String): List<SubscriptionPlan> {
+    override fun getPlanByType(type: SubscriptionType): List<SubscriptionPlan> {
         return repository.getPlanByType(type)
     }
 

@@ -1,9 +1,9 @@
 package com.sirdave.buildspace.mapper
 
-import com.sirdave.buildspace.helper.SubscriptionType
 import com.sirdave.buildspace.subscription.Subscription
 import com.sirdave.buildspace.subscription.SubscriptionDto
 import com.sirdave.buildspace.subscription.SubscriptionPlanDto
+import com.sirdave.buildspace.subscription_plan.SubscriptionPlan
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -26,11 +26,11 @@ fun Subscription.toSubscriptionDto(): SubscriptionDto {
     )
 }
 
-fun SubscriptionType.toSubscriptionPlan(): SubscriptionPlanDto{
+fun SubscriptionPlan.toSubscriptionPlanDto(): SubscriptionPlanDto{
     return SubscriptionPlanDto(
         name = name,
         amount = amount,
         numberOfDays = numberOfDays,
-        type = type
+        type = type.name
     )
 }

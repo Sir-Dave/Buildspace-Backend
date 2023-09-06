@@ -19,5 +19,5 @@ interface SubscriptionPlanService {
         type: String
     ): SubscriptionPlan
 
-    fun getPlanByType(type: String): List<SubscriptionPlan>
+    fun getPlanByType(type: SubscriptionType): List<SubscriptionPlan>
 }

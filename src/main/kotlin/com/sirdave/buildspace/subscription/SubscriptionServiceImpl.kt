@@ -1,10 +1,12 @@
 package com.sirdave.buildspace.subscription
 
 import com.sirdave.buildspace.exception.EntityNotFoundException
-import com.sirdave.buildspace.helper.SubscriptionType
+import com.sirdave.buildspace.helper.getEnumName
 import com.sirdave.buildspace.helper.getSubscriptionType
 import com.sirdave.buildspace.mapper.toSubscriptionDto
-import com.sirdave.buildspace.mapper.toSubscriptionPlan
+import com.sirdave.buildspace.mapper.toSubscriptionPlanDto
+import com.sirdave.buildspace.subscription_plan.SubscriptionPlanService
+import com.sirdave.buildspace.subscription_plan.SubscriptionType
 import com.sirdave.buildspace.user.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -15,7 +17,9 @@ import javax.transaction.Transactional
 @Service
 class SubscriptionServiceImpl(
     private val repository: SubscriptionRepository,
-    private val userService: UserService): SubscriptionService {
+    private val userService: UserService,
+    private val subscriptionPlanService: SubscriptionPlanService
+): SubscriptionService {
 
     private val logger = LoggerFactory.getLogger(javaClass.simpleName)
 
@@ -52,8 +56,9 @@ class SubscriptionServiceImpl(
     }
 
     override fun getAllSubscriptionPlans(type: String): List<SubscriptionPlanDto> {
-        return SubscriptionType.values().filter { it.type.equals(type, ignoreCase = true) }
-            .map{ it.toSubscriptionPlan() }
+        val subscriptionType = getEnumName<SubscriptionType>(type)
+        return subscriptionPlanService.getPlanByType(subscriptionType)
+            .map { it.toSubscriptionPlanDto() }
     }
 
     @Scheduled(cron = "0 0 * * * *")
