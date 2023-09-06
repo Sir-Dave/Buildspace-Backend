@@ -31,7 +31,8 @@ class PaymentListener(
 
             subscriptionService.createSubscription(
                 transaction.userEmail!!,
-                transaction.subscriptionType!!
+                transaction.subscriptionType!!,
+                transaction.numDays
             )
         }
     }

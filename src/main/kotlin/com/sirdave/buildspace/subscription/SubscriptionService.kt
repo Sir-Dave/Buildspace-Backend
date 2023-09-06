@@ -10,7 +10,7 @@ interface SubscriptionService {
 
     fun getUserCurrentSubscription(userId: UUID): SubscriptionDto
 
-    fun createSubscription(userEmail: String, type: String)
+    fun createSubscription(userEmail: String, type: String, numDays: Int)
 
     fun getAllSubscriptionPlans(type: String): List<SubscriptionPlanDto>
 

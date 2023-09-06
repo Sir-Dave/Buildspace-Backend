@@ -2,7 +2,6 @@ package com.sirdave.buildspace.subscription
 
 import com.sirdave.buildspace.exception.EntityNotFoundException
 import com.sirdave.buildspace.helper.getEnumName
-import com.sirdave.buildspace.helper.getSubscriptionType
 import com.sirdave.buildspace.mapper.toSubscriptionDto
 import com.sirdave.buildspace.mapper.toSubscriptionPlanDto
 import com.sirdave.buildspace.subscription_plan.SubscriptionPlanService
@@ -43,11 +42,12 @@ class SubscriptionServiceImpl(
         return user.currentSubscription!!.toSubscriptionDto()
     }
 
-    override fun createSubscription(userEmail: String, type: String) {
+    override fun createSubscription(userEmail: String, type: String, numDays: Int) {
         val user = userService.findUserByEmail(userEmail)
         val subscription = Subscription(
             user = user,
-            type = getSubscriptionType(type)
+            type = type,
+            numberOfDays = numDays
         )
 
         subscription.addToUserSubscription(user)
