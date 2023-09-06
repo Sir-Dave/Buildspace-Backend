@@ -21,14 +21,3 @@ inline fun <reified T : Enum<T>> getEnumName(name: String): T {
 inline fun <reified T : Enum<T>> isValidEnum(name: String): Boolean {
     return enumValues<T>().any { enum -> enum.name.equals(name, ignoreCase = true) }
 }
-
-fun getSubscriptionType(name: String): SubscriptionType {
-    check(isValidSubscriptionType(name)){
-        throw IllegalStateException("Invalid subscription type")
-    }
-    return SubscriptionType.valueOf(name.uppercase())
-}
-
-fun isValidSubscriptionType(name: String): Boolean {
-    return Arrays.stream(SubscriptionType.values()).anyMatch { type -> type.name.equals(name, ignoreCase = true) }
-}
