@@ -19,14 +19,18 @@ class PaymentController(private val paymentService: PaymentService) {
         @RequestParam cardExpiryMonth: String,
         @RequestParam cardExpiryYear: String,
         @RequestParam pin: String,
-        @RequestParam subscriptionType: String,
-        @RequestParam numDays: Int
+        @RequestParam planName: String,
     ): ResponseEntity<TransactionResponse> {
 
         return paymentService.charge(
-            email, amount, cardCvv, cardNumber,
-            cardExpiryMonth, cardExpiryYear, pin,
-            subscriptionType, numDays
+            email = email,
+            amount = amount,
+            cardCvv = cardCvv,
+            cardNumber = cardNumber,
+            cardExpiryMonth = cardExpiryMonth,
+            cardExpiryYear = cardExpiryYear,
+            pin = pin,
+            planName = planName
         )
     }
 

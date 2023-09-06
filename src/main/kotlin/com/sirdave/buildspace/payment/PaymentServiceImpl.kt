@@ -46,8 +46,7 @@ class PaymentServiceImpl(
         cardExpiryMonth: String,
         cardExpiryYear: String,
         pin: String,
-        type: String,
-        numDays: Int
+        planName: String,
     ): ResponseEntity<TransactionResponse> {
 
         val user = userService.findUserByEmail(email)
@@ -91,8 +90,7 @@ class PaymentServiceImpl(
             else formatDate(response.data.paidAt),
             status = Status.PENDING,
             userEmail = email,
-            subscriptionType =  type,
-            numDays = numDays,
+            subscriptionPlan = planName,
             currency = response.data.currency ?: "NGN"
         )
 

@@ -11,8 +11,7 @@ interface  PaymentService {
                cardExpiryMonth: String,
                cardExpiryYear: String,
                pin: String,
-               type: String,
-               numDays: Int
+               planName: String,
     ): ResponseEntity<TransactionResponse>
 
     fun sendOTP(otp: String, reference: String): TransactionResponse
