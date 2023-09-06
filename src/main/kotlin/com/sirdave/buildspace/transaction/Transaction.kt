@@ -15,6 +15,7 @@ class Transaction(var reference: String){
 
     var userEmail: String? = null
     var subscriptionType: String? = null
+    var numDays: Int = 0
 
     var currency: String = "NGN"
 
@@ -31,6 +32,7 @@ class Transaction(var reference: String){
                 status: Status,
                 userEmail: String,
                 subscriptionType: String,
+                numDays: Int,
                 currency: String): this(reference){
 
         this.amount = amount
@@ -39,6 +41,7 @@ class Transaction(var reference: String){
         this.status = status
         this.userEmail = userEmail
         this.subscriptionType = subscriptionType
+        this.numDays = numDays
         this.currency = currency
     }
 }
