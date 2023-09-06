@@ -11,22 +11,23 @@ class PaymentController(private val paymentService: PaymentService) {
 
     @Operation(summary = "Users make payment using this endpoint.")
     @PostMapping
-    fun makePayment(@RequestParam email: String,
-                    @RequestParam amount: Double,
-                    @RequestParam cardCvv: String,
-                    @RequestParam cardNumber: String,
-                    @RequestParam cardExpiryMonth: String,
-                    @RequestParam cardExpiryYear: String,
-                    @RequestParam pin: String,
-                    @RequestParam subscriptionType: String
+    fun makePayment(
+        @RequestParam email: String,
+        @RequestParam amount: Double,
+        @RequestParam cardCvv: String,
+        @RequestParam cardNumber: String,
+        @RequestParam cardExpiryMonth: String,
+        @RequestParam cardExpiryYear: String,
+        @RequestParam pin: String,
+        @RequestParam subscriptionType: String,
+        @RequestParam numDays: Int
     ): ResponseEntity<TransactionResponse> {
 
-        val response = paymentService.charge(
+        return paymentService.charge(
             email, amount, cardCvv, cardNumber,
             cardExpiryMonth, cardExpiryYear, pin,
-            subscriptionType
+            subscriptionType, numDays
         )
-        return response
     }
 
     @Operation(summary = "Send OTP.")

@@ -5,7 +5,6 @@ import com.sirdave.buildspace.event.PaymentSuccessEvent
 import com.sirdave.buildspace.exception.PaymentException
 import com.sirdave.buildspace.helper.Status
 import com.sirdave.buildspace.helper.formatDate
-import com.sirdave.buildspace.helper.getSubscriptionType
 import com.sirdave.buildspace.transaction.Transaction
 import com.sirdave.buildspace.transaction.TransactionService
 import com.sirdave.buildspace.user.UserService
@@ -47,14 +46,13 @@ class PaymentServiceImpl(
         cardExpiryMonth: String,
         cardExpiryYear: String,
         pin: String,
-        type: String
+        type: String,
+        numDays: Int
     ): ResponseEntity<TransactionResponse> {
 
         val user = userService.findUserByEmail(email)
         if (user.currentSubscription != null)
             throw IllegalStateException("Current subscription is still active for user")
-
-        val subscriptionType = getSubscriptionType(type)
 
         val card = Card(cardCvv, cardNumber, cardExpiryMonth, cardExpiryYear)
         val chargeRequest = ChargeRequest(email, (amount * 100).toString(), card, pin)
@@ -93,7 +91,8 @@ class PaymentServiceImpl(
             else formatDate(response.data.paidAt),
             status = Status.PENDING,
             userEmail = email,
-            subscriptionType = subscriptionType.name,
+            subscriptionType =  type,
+            numDays = numDays,
             currency = response.data.currency ?: "NGN"
         )
 
