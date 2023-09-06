@@ -14,6 +14,7 @@ class Subscription(
     @JoinColumn(name = "user_id")
     var user: User,
     val type: String,
+    val amount: Double,
     val numberOfDays: Int,
 ){
 

@@ -42,11 +42,12 @@ class SubscriptionServiceImpl(
         return user.currentSubscription!!.toSubscriptionDto()
     }
 
-    override fun createSubscription(userEmail: String, type: String, numDays: Int) {
+    override fun createSubscription(userEmail: String, type: String, amount: Double, numDays: Int) {
         val user = userService.findUserByEmail(userEmail)
         val subscription = Subscription(
             user = user,
             type = type,
+            amount = amount,
             numberOfDays = numDays
         )
 
