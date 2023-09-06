@@ -1,5 +1,6 @@
 package com.sirdave.buildspace.subscription
 
+import com.sirdave.buildspace.subscription_plan.SubscriptionPlan
 import com.sirdave.buildspace.user.User
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Parameter
@@ -13,9 +14,10 @@ class Subscription(
     @ManyToOne
     @JoinColumn(name = "user_id")
     var user: User,
-    val type: String,
-    val amount: Double,
-    val numberOfDays: Int,
+
+    @OneToOne
+    @JoinColumn(name = "plan_id")
+    val plan: SubscriptionPlan
 ){
 
     @Id
@@ -34,7 +36,7 @@ class Subscription(
 
     val startDate: LocalDateTime = LocalDateTime.now()
 
-    val endDate: LocalDateTime = startDate.plusDays(numberOfDays.toLong())
+    val endDate: LocalDateTime = startDate.plusDays(plan.numberOfDays.toLong())
 
     fun isExpired(): Boolean {
         return endDate.isBefore(LocalDateTime.now())
